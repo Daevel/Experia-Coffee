@@ -1,19 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nodejs-deployment
+  name: nodeapp-deployment
+  labels:
+    app: nodeapp
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nodejs
+      app: nodeapp
   template:
     metadata:
       labels:
-        app: nodejs
+        app: nodeapp
     spec:
       containers:
-        - name: nodejs-app
-          image: daevel/backend-nodejs:1
+        - name: nodeserver
+          image: daevel/nodejsapp:latest
           ports:
             - containerPort: 3000
