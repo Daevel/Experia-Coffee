@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+spec:
+  replicas: 2  # Specifica il numero desiderato di repliche
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend-container
+          image: nome_immagine_frontend:tag  # Inserisci il nome e la versione dell'immagine Docker
+          ports:
+            - containerPort: 80
