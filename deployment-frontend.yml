@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: frontend-deployment
 spec:
-  replicas: 2  # Specifica il numero desiderato di repliche
+  replicas: 1
   selector:
     matchLabels:
       app: frontend
@@ -13,7 +13,7 @@ spec:
         app: frontend
     spec:
       containers:
-        - name: frontend-container
-          image: nome_immagine_frontend:tag  # Inserisci il nome e la versione dell'immagine Docker
+        - name: frontend
+          image: daevel/frontendapp:latest
           ports:
             - containerPort: 80

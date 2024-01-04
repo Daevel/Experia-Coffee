@@ -17,5 +17,8 @@ spec:
       containers:
         - name: nodeserver
           image: daevel/nodejsapp:latest
+          env:
+            - name: DATABASE_URL
+              value: "mysql://root:PQRSK59LQ???@@@@mysql-service:3306/esempio_database"
           ports:
             - containerPort: 3000
