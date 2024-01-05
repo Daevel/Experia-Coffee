@@ -1,0 +1,44 @@
+Se bloccati da proxy eseguire i seguenti comandi :
+    DATABASE : docker pull mysql:latest
+    BACKEND : docker pull nodejs:latest
+    FRONTEND : docker pull nginx:alpine
+
+- Eseguire accesso su docker : docker login
+    - username : root
+    - password :
+
+Se raggiungibile esternamente :
+    DATABASE : docker build -t daevel/databaseapp:latest -f Dockerfile.database .
+    BACKEND : docker build -t daevel/nodejsapp:latest -f Dockerfile.backend .
+    FRONTEND : docker build -t daevel/frontendapp:latest -f Dockerfile.frontend .
+
+    // ESEGUI IL RUN
+
+    DATABASE : docker run -d -p 3306:3306 daevel/databaseapp:latest
+    BACKEND : docker run -d -p 5000:5000 daevel/nodejsapp:latest
+    FRONTEND : docker run -d -p 8000:8000 daevel/frontendapp:latest
+
+# KUBERNETES
+    # BUILD DEI POD
+
+    DATABASE
+    - kubectl apply -f mysql-deployment.yaml
+    - kubectl apply -f mysql-service.yaml
+
+    BACKEND
+    - kubectl apply -f deployment-nodejsapp.yaml
+    - kubectl apply -f service-nodejsapp.yaml
+
+    FRONTEND
+    - kubectl apply -f deployment-frontend.yaml
+    - kubectl apply -f service-frontend.yaml
+
+    - kubectl get pods
+    - kubectl get svc
+    - kubectl get deployments
+
+    ----
+
+    docker run -d --name database -v ./db-data:/var/lib/mysql -e MYSQL_ALLOW_EMPTY_PASSWORD= -e MYSQL_DATABASE=esempio_database -p 3306:3306 daevel/databaseapp:latest
+    docker run -d --name backend --link database -p 3000:3000 daevel/nodejsapp:latest
+    docker run -d --name frontend -p 80:80 daevel/frontendapp:latest
