@@ -6,3 +6,5 @@ ENV MYSQL_USER=daevel
 ENV MYSQL_PASSWORD=password
 
 COPY ./Example.sql /docker-entrypoint-initdb.d/
+
+EXPOSE 3306
