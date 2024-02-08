@@ -1,28 +1,33 @@
-version: '3'
+version: '3.8'
 
 services:
   frontend:
     build:
-      context: .
+      context: frontend/
       dockerfile: Dockerfile.frontend
     ports:
       - "80:80"
+    depends_on:
+      - app
 
-  backend:
+  app:
     build:
-      context: .
+      context: backend/
       dockerfile: Dockerfile.backend
     ports:
       - "3000:3000"
+    volumes:
+      - .:/app
+      - '/app/node_modules'
     depends_on:
-      - mysql
+      - mysql_server
 
-  mysql:
+  mysql_server:
     build:
-      context: .
+      context: db/
       dockerfile: Dockerfile.database
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: experia_coffee
-    ports:
-      - "3306:3306"
+      - MYSQL_DATABASE=tecweb_experia_coffee
+      - MYSQL_USER=daevel
+      - MYSQL_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=password
