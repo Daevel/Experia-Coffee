@@ -6,7 +6,7 @@ const mysqlConfig = {
     host: "mysql_server",
     user: "daevel",
     password: "password",
-    database: "tecweb_experia_coffee",
+    database: "experia_coffee",
     insecureAuth: true
 }
 const app = express();

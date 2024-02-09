@@ -27,7 +27,7 @@ services:
       context: db/
       dockerfile: Dockerfile.database
     environment:
-      - MYSQL_DATABASE=tecweb_experia_coffee
+      - MYSQL_DATABASE=experia_coffee
       - MYSQL_USER=daevel
       - MYSQL_PASSWORD=password
       - MYSQL_ROOT_PASSWORD=password

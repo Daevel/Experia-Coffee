@@ -1,7 +1,7 @@
 FROM mysql:latest
 
 ENV MYSQL_ROOT_PASSWORD=password
-ENV MYSQL_DATABASE=tecweb_experia_coffee
+ENV MYSQL_DATABASE=experia_coffee
 ENV MYSQL_USER=daevel
 ENV MYSQL_PASSWORD=password
 
