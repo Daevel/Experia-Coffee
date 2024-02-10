@@ -4,12 +4,48 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../styles/style.css">
+    <script type="module" src="../js/apiService.js"></script>
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
+    <link rel="manifest" href="../site.webmanifest">
+    <link rel="mask-icon" href="../assets/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
 </head>
 <body>
-<div class="card">
-    <div class="card-body">
-        This is some text within a card body.
+
+<div class="container">
+    <div class="w-50 m-auto text-center mt-5">
+        <h1>Coffee, like never tasted before.</h1>
+    </div>
+
+    <div class="form-container">
+        <form action="/api/auth" method="post">
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Username</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required>
+                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" required>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Ricordami</label>
+            </div>
+            <div class="btn-label">
+                <button type="submit" id="loginButton" class="btn btn-primary mb-1">Accedi</button>
+                <div class="divider">
+                    oppure
+                </div>
+                <button type="submit" class="btn btn-danger mt-1">Registrati</button>
+            </div>
+        </form>
     </div>
 </div>
+
 </body>
 </html>

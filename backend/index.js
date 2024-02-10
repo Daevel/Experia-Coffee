@@ -22,25 +22,7 @@ app.get("/", function (req, res) {
     res.send("Hello world");
 })
 
-app.get("/api/retrieveData", function (req, res) {
-    let payloadData = [
-        {
-            "name": "luigi",
-            "surname": "avitabile",
-        },
-        {
-            "name": "luigi",
-            "surname": "d'ausilio",
-        },
-        {
-            "name": "luigi",
-            "surname": "iannace",
-        }
-    ]
-    res.json(payloadData);
-    return res.send(payloadData);
-})
-
+// DB CONN
 app.get("/api/connect", function (req, res) {
     con = mysql.createConnection(mysqlConfig);
     con.connect(function (err) {
@@ -49,24 +31,32 @@ app.get("/api/connect", function (req, res) {
     });
 });
 
-app.get("/api/will", function (req, res) {
-    res.send('{"response": "Hello world"}');
-})
-
-app.get("/api/ready", function (req, res) {
-    res.send('{"response": "Great!, It works!"}');
-})
-
+// USER TASKS
 app.get("/api/userList", function (req,res) {
     con.connect(function(err ) {
         if (err) throw err;
-        const sql = "SELECT * FROM tbl_utente";
+        const sql = "SELECT * FROM tbl_cliente;";
         con.query(sql, function(err, result, fields) {
             if (err) throw err;
+            console.log(result);
             res.send(JSON.stringify(result));
         });
     });
 });
+
+// AUTH API
+app.post("/api/auth", function(req, res) {
+    const { username, password } = req.body;
+    con.connect(function(err ) {
+        if(err) throw err;
+        const sql = "SELECT EMAIL, UTENTE_PASSWORD FROM tbl_cliente;";
+        con.query(sql, function(err, result) {
+            if (err) throw err;
+            console.log(result);
+            res.send(JSON.stringify(result));
+        })
+    })
+})
 
 app.listen(3000);
 console.log("listening on 3000");
