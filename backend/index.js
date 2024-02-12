@@ -12,6 +12,8 @@ const mysqlConfig = {
 const app = express();
 
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
@@ -47,16 +49,32 @@ app.get("/api/userList", function (req,res) {
 // AUTH API
 app.post("/api/auth", function(req, res) {
     const { username, password } = req.body;
-    con.connect(function(err ) {
-        if(err) throw err;
-        const sql = "SELECT EMAIL, UTENTE_PASSWORD FROM tbl_cliente;";
-        con.query(sql, function(err, result) {
-            if (err) throw err;
-            console.log(result);
-            res.send(JSON.stringify(result));
+    try {
+        con.connect(function(err ) {
+            if(err) throw err;
+            const sql = authQuery;
+            con.query(sql, [username, password], function(err, result) {
+                if (err) {
+                    console.error("Errore durante l'esecuzione della query", err);
+                    res.status(500).json({ error: "Errore interno del server"});
+                } else {
+                    console.log(result);
+                    res.json(result);
+                }
+            });
         })
-    })
+    } catch (err) {
+        console.error("Errore durante la connessione al database:", err);
+        res.status(500).json({ error: "Errore interno del server"});
+    } finally {
+        con.end(() => {
+            console.log("Connection closed");
+        });
+    }
 })
 
-app.listen(3000);
-console.log("listening on 3000");
+const authQuery = "SELECT EMAIL, UTENTE_PASSWORD FROM tbl_cliente WHERE EMAIL = ? AND UTENTE_PASSWORD = ?";
+
+app.listen(3000, () => {
+    console.log(`Listening on port 3000`);
+});

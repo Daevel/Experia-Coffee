@@ -4,7 +4,7 @@
     --button-color: #d6d1d1;
 }
 
-html,body {
+html,body,p {
     background-color: var(--background-color);
     color: var(--text-color);
 }

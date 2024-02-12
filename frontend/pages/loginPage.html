@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Accedi</title>
     <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../styles/style.css">
-    <script type="module" src="../js/apiService.js"></script>
     <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
@@ -22,30 +21,29 @@
     </div>
 
     <div class="form-container">
-        <form action="/api/auth" method="post">
+        <form method="post" id="loginForm">
             <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Username</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required>
-                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+                <p id="emailHelp">We'll never share your email with anyone else.</p>
             </div>
             <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword1" required>
-            </div>
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1">Ricordami</label>
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" required>
             </div>
             <div class="btn-label">
-                <button type="submit" id="loginButton" class="btn btn-primary mb-1">Accedi</button>
+                <button type="button" onclick="login()" class="btn btn-primary mb-1">Accedi</button>
                 <div class="divider">
                     oppure
                 </div>
-                <button type="submit" class="btn btn-danger mt-1">Registrati</button>
+                <button type="button" class="btn btn-danger mt-1">Registrati</button>
             </div>
         </form>
     </div>
 </div>
+
+
+<script src="../js/apiService.js"></script>
 
 </body>
 </html>
