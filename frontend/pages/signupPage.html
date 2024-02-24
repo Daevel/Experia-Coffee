@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Iscriviti</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script type="module" src="../js/apiService.js"></script>
+    <script type="module" src="../js/appEnvironment.js"></script>
+
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
+    <link rel="manifest" href="../site.webmanifest">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="mask-icon" href="../assets/safari-pinned-tab.svg" color="#5bbad5">
+
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+
+</head>
+<body>
+
+<div class="container" data-aos="fade-up">
+
+    <div class="form-container">
+        
+        <form id="loginForm">
+            <div class="mb-3">
+                <label for="name" class="form-label">Nome</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+                <p id="loginErrorMessage" data-aos="fade-up"></p>
+            </div>
+            <div class="mb-3">
+                <label for="surname" class="form-label">Cognome</label>
+                <input type="surname" class="form-control" id="surname" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Email</label>
+                <input type="password" class="form-control" id="password" required>
+            </div>
+            <div class="mb-3">
+                <label for="mobilePhone" class="form-label">Cellulare</label>
+                <input type="mobilePhone" class="form-control" id="mobilePhone" required>
+            </div>
+            <div class="mb-3">
+                <label for="city" class="form-label">Città</label>
+                <input type="city" class="form-control" id="city" required>
+            </div>
+            <div class="mb-3">
+                <label for="address" class="form-label">Via</label>
+                <input type="address" class="form-control" id="address" required>
+            </div>
+            <div class="mb-3">
+                <label for="addressNumber" class="form-label">Num. Civico</label>
+                <input type="addressNumber" class="form-control" id="addressNumber" required>
+            </div>
+            <div class="mb-3">
+                <label for="capNumber" class="form-label">CAP</label>
+                <input type="capNumber" class="form-control" id="capNumber" required>
+            </div>
+            <div class="mb-3">
+                <label for="creditCardNumber" class="form-label">Numero carta</label>
+                <input type="creditCardNumber" class="form-control" id="creditCardNumber" required>
+            </div>
+            <div class="mb-3">
+                <label for="creditCardCVV" class="form-label">CVV carta</label>
+                <input type="creditCardCVV" class="form-control" id="creditCardCVV" required>
+            </div>
+            <div class="mb-3">
+                <label for="creditCardOwner" class="form-label">Intestatario carta</label>
+                <input type="creditCardOwner" class="form-control" id="creditCardOwner" required>
+            </div>
+            <div class="mb-3">
+                <label for="creditCardExpireDate" class="form-label">Scadenza carta</label>
+                <input type="creditCardExpireDate" class="form-control" id="creditCardExpireDate" required>
+            </div>
+            <div class="mb-3">
+                <label for="fiscalCode" class="form-label">Codice fiscale</label>
+                <input type="fiscalCode" class="form-control" id="fiscalCode" required>
+            </div>
+            <div class="mb-3">
+                <label for="birthDate" class="form-label">Data di nascita</label>
+                <input type="birthDate" class="form-control" id="birthDate" required>
+            </div>
+            <div class="btn-label">
+                <button type="button" id="signUpBtn" onclick="signUp()" class="btn btn-primary mb-1">Iscriviti</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<script>
+    AOS.init();
+</script>
+
+</body>
+</html>
