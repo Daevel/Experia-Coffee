@@ -5,4 +5,4 @@ ENV MYSQL_DATABASE=experia_coffee
 ENV MYSQL_USER=daevel
 ENV MYSQL_PASSWORD=password
 
-COPY ./Example.sql /docker-entrypoint-initdb.d/
+COPY ./experia_coffee.sql /docker-entrypoint-initdb.d/

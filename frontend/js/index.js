@@ -1,11 +1,12 @@
-import { apiUrl }  from "./appEnvironment.js";
-
 /**
  * @description after the DOM has been loaded it initializes the init() function.
  */
+import {establishConnection} from "./apiService.js";
+
+
 document.addEventListener('DOMContentLoaded', function () {
-   init();
-})
+  init();
+});
 
 /**
  * @author Daevel
@@ -13,14 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
  * @returns true if the connection is established correctly.
  */
 function init() {
-   const response = fetch(`${apiUrl}/api/connect`).then((response) => {
-      if (response.status === 200) {
-         window.location.href = '/pages/loginPage.html';
-      } else {
-         console.log('authentication failed');
-      }
-   }).finally(() => {
-      console.log('finally executed');
-   });
+   establishConnection();
 }
 

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Home</title>
+
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+
+    <script src="../node_modules/aos/dist/aos.js"></script>
+    <link href="../node_modules/aos/dist/aos.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="../styles/style.css">
+
+    <script type="module" src="../js/apiService.js"></script>
+    <script type="module" src="../js/appEnvironment.js"></script>
+    <script type="module" src="../js/utility.js"></script>
+    <script type="module" src="../js/profilePage.js"></script>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
+    <link rel="manifest" href="../site.webmanifest">
+    <link rel="mask-icon" href="../assets/safari-pinned-tab.svg" color="#5bbad5">
+
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="../assets/favicon.ico" alt="experia-coffee-logo">
+            Experia Coffee
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav" id="clienteContent" style="display: none">
+                <li class="nav-item">
+                    <a class="nav-link" href="homePage.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="orderPage.html">Ordini</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="profilePage.html">Profilo</a>
+                </li>
+                <li class="nav-item">
+                    <button class="btn btn-warning" id="clientelogoutBtn" onclick="logout()">Logout</button>
+                </li>
+            </ul>
+            <ul class="navbar-nav" id="dipendenteContent" style="display: none">
+                <li class="nav-item">
+                    <a class="nav-link" href="dipendenteHomePage.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="profilePage.html">Profilo</a>
+                </li>
+                <li class="nav-item">
+                    <button class="btn btn-warning" id="dipendentelogoutBtn" onclick="logout()">Logout</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<br>
+
+<div>
+    <div class="mb-4">
+        <img width="150" height="150" src="../assets/avatar.png" alt="avatar icon">
+    </div>
+    <div class="mb-4">
+        <h5>Nome</h5>
+        <p id="name" data-aos="fade-in"></p>
+    </div>
+
+    <div class="mb-4"  >
+        <h5>Cognome</h5>
+        <p id="surname" data-aos="fade-in"></p>
+    </div>
+
+    <div class="mb-4"  >
+        <h5>Email</h5>
+        <p id="email" data-aos="fade-in"></p>
+    </div>
+
+    <div class="mb-4"  >
+        <h5>Data di nascita</h5>
+        <p id="birthDate" data-aos="fade-in"></p>
+    </div>
+
+    <div class="mb-4"  >
+        <h5>Codice fiscale</h5>
+        <p id="fiscalCode" data-aos="fade-in"></p>
+    </div>
+
+</div>
+
+<br>
+
+<div class="accordion mb-3" id="accordionExample">
+    <div class="accordion-item" id="resetEmailClienteContent" style="display: none">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                Cambia email
+            </button>
+        </h2>
+        <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+            <div class="accordion-body flex-column d-flex">
+
+                <strong>Inserisci la nuova email nel seguente campo</strong>Assicurati di non inserire una mail già esistente.
+
+                <div class="mt-2 mb-2">
+                    <label class="form-label d-block">Email</label>
+                    <input type="text" class="form-control" id="newEmail" required>
+                </div>
+
+                <button class="btn btn-primary" onclick="resetEmail()">Cambia email</button>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                Cambia password
+            </button>
+        </h2>
+        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+            <div class="accordion-body flex-column d-flex">
+
+                <strong>Inserisci la nuova password nei seguenti campi</strong>Assicurati che all'interno di entrambi i campi sia contenuta la stessa password.
+
+
+                <div class="mt-2 mb-2">
+                    <label class="form-label d-block">Password nuova</label>
+                    <input type="password" class="form-control"  id="password">
+                </div>
+
+                <div class="mt-2 mb-2">
+                    <label class="form-label d-block">Ripeti password</label>
+                    <input type="password" class="form-control"  id="repeatPassword">
+                    <p class="text-danger" id="mismatchPasswordLabel" data-aos="fade-in"></p>
+                </div>
+
+                <button class="btn btn-primary" onclick="resetPassword()">Effettua reset password</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    AOS.init()
+</script>
+
+</body>
+</html>

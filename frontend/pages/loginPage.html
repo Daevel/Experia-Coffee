@@ -5,19 +5,26 @@
 
     <title>Accedi</title>
 
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+
+    <script src="../node_modules/aos/dist/aos.js"></script>
+    <link href="../node_modules/aos/dist/aos.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="../styles/style.css">
 
     <script type="module" src="../js/apiService.js"></script>
+    <script type="module" src="../js/loginPage.js"></script>
     <script type="module" src="../js/appEnvironment.js"></script>
-    <script type="module" src="../js/pageActions.js"></script>
 
-    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../styles/style.css">
     <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
     <link rel="manifest" href="../site.webmanifest">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
     <link rel="mask-icon" href="../assets/safari-pinned-tab.svg" color="#5bbad5">
 
     <meta name="msapplication-TileColor" content="#da532c">
@@ -27,6 +34,7 @@
 <body>
 
 <div class="container" data-aos="fade-up">
+    <img style="margin: 0 auto; display: flex; align-items: center" src="../assets/android-chrome-192x192.png" alt="favicon">
 
     <div class="form-container">
         <div class="w-auto m-auto mb-5 text-center">
@@ -47,14 +55,11 @@
                 <div class="divider">
                     oppure
                 </div>
-                <button type="button" id="openSignupPage" onclick="openSignupPage()" class="btn btn-danger mt-1">Registrati</button>
+                <button type="button" id="openSignupPage" class="btn btn-danger mt-1">Registrati</button>
             </div>
         </form>
     </div>
 </div>
-
-
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
 <script>
     AOS.init();

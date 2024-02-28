@@ -1,38 +1,78 @@
 import { apiUrl } from "./appEnvironment.js";
+import {checkMismatchPassword} from "./utility.js";
 
-document.addEventListener('DOMContentLoaded', () => {
-    init();
-})
-
-function init() {
-    console.log('apiService initialized');
+export function establishConnection() {
+    $.get({
+        url: `${apiUrl}/api/connect`,
+        method: "GET",
+        contentType: 'application/json',
+        success: function(response) {
+            if(response.message === "connected") {
+                window.location.href = '../pages/loginPage.html';
+            }
+            console.log('authentication failed');
+        },
+        error: function (error) {
+            console.error("DATABASE CONNECTION FAILED", error);
+        }
+    })
 }
 
-function login() {
+export function login() {
        const username=  $("#username").val();
        const password = $("#password").val();
+
+
+       if (!username || !password) {
+           $('#loginErrorMessage').text('Inserisci username e password.');
+           return;
+       }
+
        const payload = {
            username: username,
            password: password
        };
+
+
    $.post({
        url: `${apiUrl}/api/auth`,
        contentType: 'application/json',
        data: JSON.stringify(payload),
        success: function(response) {
-           if(response.length !== 0) {
-               sessionStorage.setItem("EMAIL", response[0].EMAIL);
-               window.location.href = "prova.html";
+           if(response.username) {
+
+               const isDipendente = response.username.includes("@experiacoffee.it")
+
+               sessionStorage.setItem("USERNAME", response.username);
+
+               if (isDipendente) {
+                   window.location.href = "dipendenteHomePage.html";
+               } else {
+                   window.location.href = "homePage.html";
+               }
+           } else {
+               $('#loginErrorMessage').text('Username o password non corrette, riprovare.');
            }
-           $('#loginErrorMessage').text('Username o password non corrette, riprovare.');
        },
        error: function(e) {
         console.error(e);
+           $('#loginErrorMessage').text('Errore durante il tentativo di accesso. Riprova più tardi.');
        }
    })
 }
 
-function signUp() {
+/**
+ * @author Daevel
+ * @description logs out the user clearing all the sessionStorage keys
+ * @return boolean
+ */
+export function logout() {
+    sessionStorage.clear();
+    window.location.href = "logoutPage.html";
+    return true;
+}
+
+export function signUp() {
 
     let __name=  $("#name").val();
     let __surname = $("#surname").val();
@@ -73,16 +113,182 @@ function signUp() {
         contentType: 'application/json',
         data: JSON.stringify(payload),
         success: function(response) {
-            if(response.length !== 0) {
-                console.log(response);
+            if (response.affectedRows > 0) {
+                window.location.href = "loginPage.html";
             }
+            console.log("errore durante l'iscrizione")
             $('#loginErrorMessage').text('Username o password non corrette, riprovare.');
-        },
-        error: function(e) {
-         console.error(e);
         }
     })
 }
+
+export function getUserInfo(username) {
+    return new Promise((resolve, reject) => {
+        $.post({
+            url: `${apiUrl}/api/viewUser`,
+            data: JSON.stringify(username),
+            contentType: 'application/json',
+            success: function(response) {
+                console.log("API RES",response);
+                resolve(response);
+            },
+            error: function(error) {
+                console.error(error);
+                reject(error);
+            }
+        })
+    });
+}
+
+export function getMarketList() {
+
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: `${apiUrl}/api/getProductList`,
+            method: "GET",
+            contentType: 'application/json',
+            success: function(response) {
+                console.log("API RES",response);
+                resolve(response);
+            },
+            error: function(error) {
+                console.error(error);
+                reject(error);
+            }
+        })
+    });
+}
+
+export function getOrderList() {
+
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: `${apiUrl}/api/getOrderList`,
+            method: "GET",
+            contentType: 'application/json',
+            success: function(response) {
+                console.log("API RES",response);
+                resolve(response);
+            },
+            error: function(error) {
+                console.error(error);
+                reject(error);
+            }
+        })
+    });
+}
+
+export function getWarehouseList() {
+
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: `${apiUrl}/api/getWarehouseList`,
+            method: "GET",
+            contentType: 'application/json',
+            success: function(response) {
+                console.log("API RES",response);
+                resolve(response);
+            },
+            error: function(error) {
+                console.error(error);
+                reject(error);
+            }
+        })
+    });
+}
+
+export function getOrderListByClient(email) {
+
+    let payload = {
+        email: email
+    }
+
+    return new Promise((resolve, reject) => {
+        $.post({
+            url: `${apiUrl}/api/getOrderListByClient`,
+            method: "POST",
+            data: JSON.stringify(payload),
+            contentType: 'application/json',
+            success: function(response) {
+                console.log("API RES",response);
+                resolve(response);
+            },
+            error: function(error) {
+                console.error(error);
+                reject(error);
+            }
+        })
+    });
+}
+
+export function changeEmail(newEmail, oldEmail) {
+
+    let payload = {
+        newEmail: newEmail,
+        oldEmail: oldEmail
+    }
+
+    $.post({
+        url: `${apiUrl}/api/changeEmail`,
+        contentType: 'application/json',
+        data: JSON.stringify(payload),
+        success: function(response) {
+            if (response.message === "Utente modificato con successo") {
+                window.location.href = "loginPage.html";
+            } else {
+                console.log("errore durante il cambio email");
+            }
+
+        }
+    })
+}
+
+export function changePassword(email, newPassword) {
+
+        let payload = {
+            password: newPassword,
+            email: email
+        }
+
+        $.post({
+            url: `${apiUrl}/api/changePassword`,
+            contentType: 'application/json',
+            data: JSON.stringify(payload),
+            success: function(response) {
+                if (response.message === "Password modificata con successo") {
+                    window.location.href = "loginPage.html";
+                } else {
+                    console.log("errore durante il cambio email");
+                }
+
+            }
+        })
+}
+
+export function createOrder(email, cartID) {
+
+    let payload = {
+        email: email,
+        cartID: cartID,
+    }
+
+    $.post({
+        url: `${apiUrl}/api/createOrder`,
+        contentType: 'application/json',
+        data: JSON.stringify(payload),
+        success: function(response) {
+            if (response.affectedRows > 0) {
+                window.location.href = "homePage.html";
+            }
+            console.log("errore durante la creazione dell'ordine");
+        }
+    })
+}
+
+export function onCheckout() {
+    //
+}
+
 
 $(document).ready(function() {
     $("#submitBtn").on('click', login);
@@ -90,4 +296,14 @@ $(document).ready(function() {
 
 $(document).ready(function() {
     $("#signUpBtn").on('click', signUp);
+})
+
+$(document).ready(function() {
+    $("#clientelogoutBtn").on('click', logout);
+    $("#logoutBtn").on('click', logout);
+    $("#dipendentelogoutBtn").on('click', logout);
+})
+
+$(document).ready(function() {
+    $("#checkoutBtn").on('click', onCheckout);
 })
