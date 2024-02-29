@@ -1,5 +1,5 @@
 import {changeEmail, changePassword, getUserInfo} from "./apiService.js";
-import {checkMismatchPassword, renderContent} from "./utility.js";
+import {checkPasswordAreEqual, renderContent} from "./utility.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     initProfileUser();
@@ -42,8 +42,8 @@ export function resetPassword() {
         let __password = $("#password").val();
         let __repeatPassword = $("#repeatPassword").val();
 
-        if (checkMismatchPassword(__password, __repeatPassword)) {
-            changePassword(__email, __password);
+        if (checkPasswordAreEqual(__password, __repeatPassword)) {
+            changePassword(__password, __email);
         } else {
             $("#mismatchPasswordLabel").text("Le password inserite non coincidono, riprova.");
         }

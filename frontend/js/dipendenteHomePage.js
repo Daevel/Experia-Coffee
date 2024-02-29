@@ -1,4 +1,4 @@
-import {getOrderList, getUserInfo, getWarehouseList, onCheckout, updateOrder} from "./apiService.js";
+import {getOrderList, getUserInfo, getWarehouseList, updateOrder} from "./apiService.js";
 import {renderContent} from "./utility.js";
 
 document.addEventListener('DOMContentLoaded', () => {

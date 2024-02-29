@@ -1,5 +1,5 @@
-export function checkMismatchPassword(password, repeatPassword) {
-    return password !== repeatPassword;
+export function checkPasswordAreEqual(password, repeatPassword) {
+    return password === repeatPassword;
 }
 
 function getTipoUtente(email) {

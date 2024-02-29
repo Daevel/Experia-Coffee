@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function initTable() {
     $(document).ready(async function () {
 
-        var tableBody = $("#tableBody");
+        var tableBody = $("#orderTableBody");
         let email = sessionStorage.getItem("USERNAME");
 
         try {

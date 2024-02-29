@@ -1,4 +1,5 @@
-import {getUserInfo} from "./apiService.js";
+import {createOrder, getUserInfo} from "./apiService.js";
+import {resetPassword} from "./profilePage.js";
 
 document.addEventListener('DOMContentLoaded', function () {
     const oggettoSelezionatoString = sessionStorage.getItem('oggettoSelezionato');
@@ -7,14 +8,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (oggettoSelezionatoString) {
         const oggettoSelezionato = JSON.parse(oggettoSelezionatoString);
-        let product = $("#products").text(calculateProduct(oggettoSelezionato));
-        let calculusIVA = $("#calculusIVA").text(calculateIVA(oggettoSelezionato));
-        let finalProducts = $("#totalProducts").text(product + calculusIVA);
 
-        console.log(product);
-        console.log(calculusIVA);
-        console.log(finalProducts);
-        console.log(oggettoSelezionato);
+        var subtotale = calculateProduct(oggettoSelezionato);
+        var totaleWithIVA = calculateTotalWithIVA(parseFloat(subtotale));
+
+
+        $("#products").text(subtotale);
+        $("#calculusIVA").text(totaleWithIVA.iva)
+        $("#totalProducts").text(totaleWithIVA.totalWithIVA);
+
     }
 
 })
@@ -54,25 +56,39 @@ function calculateIVA(subTotal) {
     return (subTotal * IVA_PERCENTAGE) / (100);
 }
 
+function calculateTotalWithIVA(subTotal) {
+    const iva = calculateIVA(subTotal);
+    const totalWithIVA = subTotal + iva;
+    return {
+        iva: iva.toFixed(2),
+        totalWithIVA: totalWithIVA.toFixed(2)
+    };
+}
+
 function calculateProduct(array) {
     let somma = 0;
 
-    for (const prodotto of array) {
-        const prezzoProdotto = parseFloat(prodotto.prezzoProdotto);
-
-        if (!isNaN(prezzoProdotto)) {
-            somma+= prezzoProdotto;
-        }
-
-    }
+    $.each(array, function(key, value) {
+        somma+= parseFloat(value.prezzoProdotto);
+    })
     return somma.toFixed(2);
 }
 
-function proceedOrder() {
+export function proceedOrder() {
     let email = sessionStorage.getItem("USERNAME");
-    let cartID = retrieveCartID(email);
-    createOrder(cartID, email);
-
+    let cartID = generateRandomOrderNumber();
+    createOrder(email, cartID);
 }
 
 
+function generateRandomOrderNumber() {
+    // Genera un numero casuale tra 100 e 999
+    const randomNumber = Math.floor(Math.random() * (999 - 100 + 1) + 100);
+
+    // Concatena il numero alla stringa "ORD - "
+    const orderNumber = `ORD-${randomNumber}`;
+
+    return orderNumber;
+}
+
+window.proceedOrder = proceedOrder;

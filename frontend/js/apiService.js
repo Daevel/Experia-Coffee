@@ -1,6 +1,7 @@
 import { apiUrl } from "./appEnvironment.js";
-import {checkMismatchPassword} from "./utility.js";
+import {checkPasswordAreEqual} from "./utility.js";
 import {deleteFilters} from "./dipendenteHomePage.js";
+import {proceedOrder} from "./checkoutPage.js";
 
 export function establishConnection() {
     $.get({
@@ -244,22 +245,23 @@ export function changeEmail(newEmail, oldEmail) {
     })
 }
 
-export function changePassword(email, newPassword) {
+export function changePassword(password, email) {
 
         let payload = {
-            password: newPassword,
+            password: password,
             email: email
         }
 
-        $.post({
+        $.ajax({
             url: `${apiUrl}/api/changePassword`,
+            method: "POST",
             contentType: 'application/json',
             data: JSON.stringify(payload),
             success: function(response) {
                 if (response.message === "Password modificata con successo") {
                     window.location.href = "loginPage.html";
                 } else {
-                    console.log("errore durante il cambio email");
+                    console.log("errore durante il cambio password");
                 }
 
             }
@@ -310,11 +312,6 @@ export function updateOrder(numeroOrdine, statoOrdine, filialeInCarico, corriere
     })
 }
 
-export function onCheckout() {
-    //
-}
-
-
 $(document).ready(function() {
     $("#submitBtn").on('click', login);
 })
@@ -327,8 +324,4 @@ $(document).ready(function() {
     $("#clientelogoutBtn").on('click', logout);
     $("#logoutBtn").on('click', logout);
     $("#dipendentelogoutBtn").on('click', logout);
-})
-
-$(document).ready(function() {
-    $("#checkoutBtn").on('click', onCheckout);
 })

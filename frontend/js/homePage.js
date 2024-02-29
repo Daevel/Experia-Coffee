@@ -9,7 +9,7 @@ async function initTable() {
     $(document).ready(async function () {
 
         const oggettoSelezionato = {};
-        var tableBody = $("#tableBody");
+        var tableBody = $("#clientTableBody");
 
         try {
             var data = await getMarketList();
@@ -42,14 +42,12 @@ async function initTable() {
                 const riga = $(this).closest('tr');
 
                 // Ottieni i dati della riga
-                const nomeProdotto = riga.find('td:eq(0)').text();
+
                 const prezzoProdotto = riga.find('td:eq(1)').text();
-                const quantita = riga.find('td:eq(2)').text();
-                const provenienza = riga.find('td:eq(3)').text();
                 const idFornitura = riga.find('td:eq(4)').text();
 
                 // Aggiungi l'oggetto all'oggetto selezionato
-                oggettoSelezionato[idFornitura] = {nomeProdotto, prezzoProdotto, quantita, provenienza, idFornitura};
+                oggettoSelezionato[idFornitura] = {prezzoProdotto, idFornitura};
 
                 sessionStorage.setItem('oggettoSelezionato', JSON.stringify(oggettoSelezionato));
 
