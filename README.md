@@ -21,7 +21,7 @@ Per eseguire il progetto correttamente, eseguire le seguenti istruzioni:
 
 ```bash
 # Clona la repository del progetto
-git clone https://github.com/Daevel/TecWeb-Project.git
+git clone https://github.com/Daevel/Experia-Coffee.git
 
 # Naviga all'interno della directory di progetto
 cd TecWeb-Project
