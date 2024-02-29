@@ -1,4 +1,4 @@
-import {getOrderList, getUserInfo, getWarehouseList} from "./apiService.js";
+import {getOrderList, getUserInfo, getWarehouseList, onCheckout, updateOrder} from "./apiService.js";
 import {renderContent} from "./utility.js";
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -88,11 +88,25 @@ async function initDipendente() {
 
 export function applyUpdateOrder() {
 
+    let numeroOrdine = $("#orderNumber").val();
+    let statoDiConsegna = $("#statoDiConsegna").val();
+    let filialeInCarico = $("#filialeInCarico").val();
+    let corriereInCarico = $("#corriereInCarico").val();
+    let idOrdine = $("#orderID").val();
+
+    updateOrder(numeroOrdine, statoDiConsegna, filialeInCarico, corriereInCarico, idOrdine);
+
 }
 
 export function deleteFilters() {
-    $("#orderID").text("");
-    $("#orderNumber").text("");
-    $("#filialeInCarico").text("");
-    $("#corriereInCarico").text("");
+    $("#orderID").val("");
+    $("#orderNumber").val("");
+    $("#filialeInCarico").val("");
+    $("#corriereInCarico").val("");
+    $("#statoDiConsegna").val("");
 }
+
+$(document).ready(function() {
+    $("#updateOrderBtn").on('click', applyUpdateOrder);
+    $("#deleteFilterBtn").on('click', deleteFilters);
+})

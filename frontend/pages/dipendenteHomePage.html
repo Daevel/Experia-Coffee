@@ -84,22 +84,15 @@
                         <input type="text" class="form-control" id="corriereInCarico" required>
                     </div>
 
-                    <label class="form-label">Seleziona stato consegna</label>
-                    <div class="btn-group my-2 mb-2" role="group" aria-label="button group status">
-
-                        <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off">
-                        <label class="btn btn-outline-success" for="btnradio1">Consegnato</label>
-
-                        <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-                        <label class="btn btn-outline-warning" for="btnradio2">In transito</label>
-
-                        <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
-                        <label class="btn btn-outline-danger" for="btnradio3">In attesa</label>
+                    <div class="mt-2 mb-2">
+                        <label class="form-label d-block">Inserisci stato di consegna</label>
+                        <input type="text" class="form-control" id="statoDiConsegna" required>
                     </div>
 
+
                     <div class="d-flex text-center">
-                        <button class="btn btn-primary w-75 m-1" onclick="applyUpdateOrder()">Aggiorna stato</button>
-                        <button class="btn btn-danger w-75 m-1" onclick="deleteFilters()">Annulla</button>
+                        <button class="btn btn-primary w-75 m-1" id="updateOrderBtn" onclick="applyUpdateOrder()">Aggiorna stato</button>
+                        <button class="btn btn-danger w-75 m-1" id="deleteFilterBtn" onclick="deleteFilters()">Annulla</button>
                     </div>
 
                 </div>

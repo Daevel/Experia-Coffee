@@ -4,62 +4,35 @@
   <img src="./frontend/assets/banner.png" alt="angular-logo"/>
   <br>
   <em>Experia coffee è un gestionale basato sulla vendita online di prodotti per il caffè
-    <br> using HTML/CSS/Javascript/JQuery ed altri linguaggi.</em>
+    <br> creato utilizzando HTML/CSS/Javascript/JQuery ed altri linguaggi.</em>
   <br>
 </p>
 
 <p align="center">
-  <a href="https://github.com/Daevel/TecWeb-Project"><strong>Tecweb project</strong></a>
+  <a href="https://github.com/Daevel/TecWeb-Project"><strong>Experia Coffee</strong></a>
   <br>
 </p>
 
 <hr>
 
-### Getting started
+### Per iniziare
 
-To contribute to Angular docs, you can setup a local environment with the following commands:
+Per eseguire il progetto correttamente, eseguire le seguenti istruzioni:
 
 ```bash
-# Clone Angular repo
+# Clona la repository del progetto
 git clone https://github.com/Daevel/TecWeb-Project.git
 
-# Navigate to project directory
+# Naviga all'interno della directory di progetto
 cd TecWeb-Project
 
-# Install dependencies
+# Effettua il compose per Docker
 docker compose up --build
-
-# Build and run local dev server
-# Note: Initial build will take some time
-yarn docs
 ```
 
-## Development Setup
+### Accortenze da seguire
 
-### Prerequisites
-
-- Install [Node.js] which includes [Node Package Manager][npm]
-
-### Setting Up a Project
-
-Install the Angular CLI globally:
-
-```
-npm install -g @angular/cli
-```
-
-Create workspace:
-
-```
-ng new [PROJECT NAME]
-```
-
-Run the application:
-
-```
-cd [PROJECT NAME]
-ng serve
-```
-
-
-
+Per eseguire il progetto correttamente, sono necessarie le seguenti istruzioni:
+- Le porte 80, 3000 ed 3306 devono essere libere
+- bisogna avere a disposizione una connessione ad internet
+- bisogna aver installato correttamente Docker sulla propria macchina

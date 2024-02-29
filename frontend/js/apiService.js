@@ -1,5 +1,6 @@
 import { apiUrl } from "./appEnvironment.js";
 import {checkMismatchPassword} from "./utility.js";
+import {deleteFilters} from "./dipendenteHomePage.js";
 
 export function establishConnection() {
     $.get({
@@ -281,6 +282,30 @@ export function createOrder(email, cartID) {
                 window.location.href = "homePage.html";
             }
             console.log("errore durante la creazione dell'ordine");
+        }
+    })
+}
+
+export function updateOrder(numeroOrdine, statoOrdine, filialeInCarico, corriereInCarico, idOrdine) {
+    let payload = {
+        numeroOrdine: numeroOrdine,
+        statoOrdine: statoOrdine,
+        filialeInCarico: filialeInCarico,
+        corriereInCarico: corriereInCarico,
+        idOrdine: idOrdine
+    }
+
+    $.ajax({
+        url: `${apiUrl}/api/updateOrder`,
+        method: "PUT",
+        contentType: 'application/json',
+        data: JSON.stringify(payload),
+        success: function(response) {
+            if (response.affectedRows > 0) {
+                window.location.href = "dipendenteHomePage.html";
+                deleteFilters();
+            }
+            console.log("errore durante l'update dell'ordine");
         }
     })
 }
