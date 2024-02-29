@@ -24,7 +24,7 @@ Per eseguire il progetto correttamente, eseguire le seguenti istruzioni:
 git clone https://github.com/Daevel/Experia-Coffee.git
 
 # Naviga all'interno della directory di progetto
-cd TecWeb-Project
+cd Experia-Coffee
 
 # Effettua il compose per Docker
 docker compose up --build
@@ -36,3 +36,7 @@ Per eseguire il progetto correttamente, sono necessarie le seguenti istruzioni:
 - Le porte 80, 3000 ed 3306 devono essere libere
 - bisogna avere a disposizione una connessione ad internet
 - bisogna aver installato correttamente Docker sulla propria macchina
+
+<hr>
+
+Autore : Avitabile Luigi 0124002627
