@@ -1,0 +1,220 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./src/generated/client"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = "mysql://root:password@localhost:3306/experia_coffee"
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model tbl_aggiunto_in {
+  ID_PRODOTTO  String       @db.VarChar(50)
+  ID_CARRELLO  String       @db.VarChar(50)
+  tbl_prodotto tbl_prodotto @relation(fields: [ID_PRODOTTO], references: [ID_PRODOTTO], onDelete: NoAction, onUpdate: NoAction, map: "tbl_aggiunto_in_ibfk_1")
+  tbl_carrello tbl_carrello @relation(fields: [ID_CARRELLO], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "tbl_aggiunto_in_ibfk_2")
+
+  @@index([ID_CARRELLO], map: "ID_CARRELLO")
+  @@index([ID_PRODOTTO], map: "ID_PRODOTTO")
+  @@ignore
+}
+
+model tbl_carrello {
+  ID                String            @id @db.VarChar(50)
+  DATA_ACQUISTO     DateTime?         @db.Date
+  QUANTITA_PRODOTTO Int
+  PREZZO_TOTALE     Float             @db.Float
+  EMAIL_CLIENTE     String?           @db.VarChar(50)
+  tbl_aggiunto_in   tbl_aggiunto_in[] @ignore
+  tbl_cliente       tbl_cliente?      @relation(fields: [EMAIL_CLIENTE], references: [EMAIL], onDelete: NoAction, map: "tbl_carrello_ibfk_1")
+  tbl_ordine        tbl_ordine[]
+
+  @@index([EMAIL_CLIENTE], map: "EMAIL_CLIENTE")
+}
+
+model tbl_cliente {
+  ID                 Int            @id @default(autoincrement())
+  NOME               String         @db.VarChar(50)
+  COGNOME            String         @db.VarChar(50)
+  EMAIL              String         @unique(map: "EMAIL") @db.VarChar(50)
+  CELLULARE          String         @db.VarChar(50)
+  CODICE_FISCALE     String         @db.VarChar(50)
+  DATA_DI_NASCITA    String         @db.VarChar(50)
+  CITTA              String         @db.VarChar(50)
+  VIA                String         @db.VarChar(50)
+  N_CIVICO           String         @db.VarChar(50)
+  CAP                String         @db.VarChar(50)
+  NUM_CARTA          String         @db.VarChar(50)
+  CVV_CARTA          String         @db.VarChar(50)
+  INTESTATARIO_CARTA String?        @db.VarChar(50)
+  SCADENZA_CARTA     DateTime?      @db.Date
+  RUOLO              String?        @default("cliente") @db.VarChar(50)
+  UTENTE_PASSWORD    String?        @default("1") @db.VarChar(50)
+  tbl_carrello       tbl_carrello[]
+}
+
+model tbl_corriere {
+  P_IVA          String           @id @db.VarChar(50)
+  NOME           String           @db.VarChar(30)
+  TELEFONO       String           @db.VarChar(50)
+  EMAIL          String           @db.VarChar(30)
+  tbl_spedizione tbl_spedizione[]
+}
+
+model tbl_dipendente {
+  ID              Int          @id @default(autoincrement())
+  NOME            String       @db.VarChar(50)
+  COGNOME         String       @db.VarChar(50)
+  EMAIL           String       @db.VarChar(50)
+  VIA             String       @db.VarChar(50)
+  N_CIVICO        String       @db.VarChar(50)
+  CAP             String       @db.VarChar(50)
+  CITTA           String       @db.VarChar(50)
+  CODICE_FISCALE  String       @db.VarChar(50)
+  DATA_DI_NASCITA String       @db.VarChar(50)
+  DATA_ASSUNZIONE DateTime?    @db.Date
+  PAGA_ORARIA     Float        @db.Float
+  CODICE_ZONA     String?      @db.VarChar(50)
+  RUOLO           String?      @default("dipendente") @db.VarChar(50)
+  UTENTE_PASSWORD String?      @default("1") @db.VarChar(50)
+  tbl_filiale     tbl_filiale? @relation(fields: [CODICE_ZONA], references: [CODICE_ZONA_FILIALE], onDelete: NoAction, onUpdate: NoAction, map: "tbl_dipendente_ibfk_1")
+
+  @@index([CODICE_ZONA], map: "CODICE_ZONA")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model tbl_emette_spedizione {
+  CODICE_ZONA_FILIALE String         @db.VarChar(50)
+  NUMERO_TRACCIAMENTO String         @db.VarChar(50)
+  tbl_filiale         tbl_filiale    @relation(fields: [CODICE_ZONA_FILIALE], references: [CODICE_ZONA_FILIALE], onDelete: NoAction, onUpdate: NoAction, map: "tbl_emette_spedizione_ibfk_1")
+  tbl_spedizione      tbl_spedizione @relation(fields: [NUMERO_TRACCIAMENTO], references: [NUMERO_TRACCIAMENTO], onDelete: NoAction, onUpdate: NoAction, map: "tbl_emette_spedizione_ibfk_2")
+
+  @@index([CODICE_ZONA_FILIALE], map: "CODICE_ZONA_FILIALE")
+  @@index([NUMERO_TRACCIAMENTO], map: "NUMERO_TRACCIAMENTO")
+  @@ignore
+}
+
+model tbl_filiale {
+  NOME_FILIALE          String                  @db.VarChar(50)
+  SEDE                  String                  @db.VarChar(50)
+  CODICE_ZONA_FILIALE   String                  @id @db.VarChar(50)
+  tbl_dipendente        tbl_dipendente[]
+  tbl_emette_spedizione tbl_emette_spedizione[] @ignore
+  tbl_gestito_da        tbl_gestito_da[]        @ignore
+  tbl_magazzino         tbl_magazzino[]         @ignore
+}
+
+model tbl_fornitore {
+  P_IVA         String          @id @db.VarChar(11)
+  NOME          String          @db.VarChar(50)
+  CITTA         String          @db.VarChar(30)
+  VIA           String          @db.VarChar(30)
+  CAP           String          @db.VarChar(30)
+  tbl_fornitura tbl_fornitura[]
+}
+
+model tbl_fornitura {
+  ID_FORNITURA    String         @id @db.VarChar(50)
+  P_IVA           String         @db.VarChar(50)
+  CODICE_ZONA     String         @db.VarChar(50)
+  PREZZO          Float?         @db.Float
+  DATA_ACQUISTO   DateTime?      @db.Date
+  DATA_SPEDIZIONE DateTime?      @db.Date
+  tbl_fornitore   tbl_fornitore  @relation(fields: [P_IVA], references: [P_IVA], onDelete: NoAction, onUpdate: NoAction, map: "tbl_fornitura_ibfk_1")
+  tbl_prodotto    tbl_prodotto[]
+
+  @@index([P_IVA], map: "P_IVA")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model tbl_gestito_da {
+  ID_FILIALE    String      @db.VarChar(50)
+  CODICE_ORDINE String      @db.VarChar(50)
+  tbl_filiale   tbl_filiale @relation(fields: [ID_FILIALE], references: [CODICE_ZONA_FILIALE], onDelete: NoAction, onUpdate: NoAction, map: "tbl_gestito_da_ibfk_1")
+  tbl_ordine    tbl_ordine  @relation(fields: [CODICE_ORDINE], references: [ID_ORDINE], onDelete: Cascade, onUpdate: NoAction, map: "tbl_gestito_da_ibfk_2")
+
+  @@index([CODICE_ORDINE], map: "CODICE_ORDINE")
+  @@index([ID_FILIALE], map: "ID_FILIALE")
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model tbl_magazzino {
+  CODICE_MAGAZZINO  String      @db.VarChar(50)
+  ID_PRODOTTO       String      @db.VarChar(50)
+  QUANTITA_PRODOTTO Int
+  NOME_PRODOTTO     String?     @db.VarChar(51)
+  NOME_MAGAZZINO    String?     @db.VarChar(50)
+  tbl_filiale       tbl_filiale @relation(fields: [CODICE_MAGAZZINO], references: [CODICE_ZONA_FILIALE], onDelete: NoAction, onUpdate: NoAction, map: "tbl_magazzino_ibfk_1")
+
+  @@index([CODICE_MAGAZZINO], map: "CODICE_MAGAZZINO")
+  @@ignore
+}
+
+model tbl_ordine {
+  ID_ORDINE            String           @id @db.VarChar(50)
+  FATTURA              String           @db.VarChar(50)
+  NUMERO_ORDINE        Int?
+  ID_CARRELLO          String?          @db.VarChar(50)
+  INDIRIZZO_SPEDIZIONE String?          @db.VarChar(50)
+  STATO_ORDINE         String?          @default("non gestito") @db.VarChar(50)
+  tbl_gestito_da       tbl_gestito_da[] @ignore
+  tbl_carrello         tbl_carrello?    @relation(fields: [ID_CARRELLO], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "tbl_ordine_ibfk_1")
+
+  @@index([ID_CARRELLO], map: "ID_CARRELLO")
+}
+
+model tbl_prodotto {
+  NOME_PRODOTTO   String            @db.VarChar(50)
+  PREZZO_PRODOTTO Float             @db.Float
+  QUANTITA        Int
+  PROVENIENZA     String            @db.VarChar(50)
+  ID_FORNITURA    String            @db.VarChar(50)
+  ID_PRODOTTO     String            @id @db.VarChar(50)
+  tbl_aggiunto_in tbl_aggiunto_in[] @ignore
+  tbl_fornitura   tbl_fornitura     @relation(fields: [ID_FORNITURA], references: [ID_FORNITURA], onDelete: NoAction, onUpdate: NoAction, map: "tbl_prodotto_ibfk_1")
+
+  @@index([ID_FORNITURA], map: "ID_FORNITURA")
+}
+
+model tbl_spedizione {
+  NUMERO_TRACCIAMENTO   String                  @id @db.VarChar(50)
+  P_IVA_CORRIERE        String                  @db.VarChar(50)
+  NUMERO_ORDINE         String                  @db.VarChar(50)
+  DATA_PARTENZA         DateTime                @db.Date
+  DATA_ARRIVO           DateTime                @db.Date
+  tbl_emette_spedizione tbl_emette_spedizione[] @ignore
+  tbl_corriere          tbl_corriere            @relation(fields: [P_IVA_CORRIERE], references: [P_IVA], onDelete: NoAction, onUpdate: NoAction, map: "tbl_spedizione_ibfk_1")
+
+  @@index([P_IVA_CORRIERE], map: "P_IVA_CORRIERE")
+}
+
+// PROVA
+
+model Profile {
+  id     Int     @default(autoincrement()) @id
+  bio    String?
+  user   User    @relation(fields: [userId], references: [id])
+  userId Int     @unique
+}
+
+model User {
+  id      Int      @default(autoincrement()) @id
+  name    String?
+  email   String   @unique
+  posts   Post[]
+  profile Profile?
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  viewCount Int      @default(0)
+  author    User?    @relation(fields: [authorId], references: [id])
+  authorId  Int?
+}

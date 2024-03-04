@@ -1,7 +1,7 @@
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
-
+const { PrismaClient } = require('@prisma/client');
 
 const mysqlConfig = {
     host: "mysql_server",
@@ -11,13 +11,12 @@ const mysqlConfig = {
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
-    //insecureAuth: true
 }
 
 const connection = mysql.createPool(mysqlConfig);
 
-
 const app = express();
+const prisma = new PrismaClient();
 
 app.use(cors());
 app.use((req, res, next) => {
@@ -33,17 +32,66 @@ app.get("/", function (req, res) {
     res.send("Hello world");
 })
 
+// trying to add a new user
+app.post("/api/addUserAndProfile", async (req, res) => {
+    try {
+        const { name, email, bio } = req.body;
+
+        const newUser = await prisma.user.create({
+            data: {
+                name,
+                email,
+            },
+        });
+
+        const newProfile = await prisma.profile.create({
+            data: {
+                bio,
+                user: {
+                    connect: { id: newUser.id },
+                },
+            },
+        });
+
+        await prisma.$disconnect();
+
+    } catch (error) {
+        console.error('Errore durante la creazione del nuovo utente');
+        return res.status(500).send({error: 'Errore durante la creazione di utente e profilo'});
+    }
+})
+
 // DB CONN
 app.get("/api/connect", function (req, res) {
     connection.getConnection(function (err, connection) {
         if (err) {
-            res.status(500).send({message: "Errore di connessione al database"});
+            return res.status(500).send({message: "Errore di connessione al database"});
+        } else {
+            connection.release();
+            return res.status(200).send({message: "connected"});
         }
-
-        connection.release();
-
-        res.status(200).send({message: "connected"});
     });
+});
+
+// AUTH API
+app.post("/api/auth", function(req, res) {
+    const { username, password } = req.body;
+    try {
+            // check intermedio per controllare se si tratta di un dipendente oppure un cliente
+            const authQuery = username.includes("@experiacoffee.it") ? dipendenteAuthQuery : clienteAuthQuery;
+            connection.query(authQuery, [username, password], function(err, result) {
+                if (err) {
+                    
+                    return res.status(500).send({ message: "Errore nella query del profilo dell'utente" });
+                }
+                if (result.length === 0) {
+                    return res.status(404).send({message: "Credenziali utenti errate."});
+                }
+                return res.status(200).send({username: username, password: password});
+            });
+    } catch (err) {
+        res.status(500).send({message: "Errore di connessione al database"});
+    }
 });
 
 
@@ -54,13 +102,13 @@ app.post("/api/viewUser", function(req, res) {
             const dataProfileQuery = username.includes("@experiacoffee.it") ? dipendenteProfileQuery : clienteProfileQuery;
             connection.query(dataProfileQuery, [username], function(err, result) {
                 if (err) {
-                    console.error("Errore nella query del profilo dell'utente:", err);
+                    
                     return res.status(500).send({ message: "Errore nella query del profilo dell'utente" });
                 }
                 if (result.length === 0) {
-                    res.status(404).send({ message: "Utente non trovato"});
+                    return res.status(404).send({ message: "Utente non trovato"});
                 }
-                res.status(200).json(result);
+                return res.status(200).json(result);
             })
     } catch (err) {
         res.status(500).send({message: "Errore di connessione al database"});
@@ -74,20 +122,16 @@ app.post("/api/changeEmail", function(req, res) {
 
             connection.query(changeEmailQuery, [newEmail, oldEmail], function(err, result) {
                 if (err) {
-                    console.error("Errore durante l'esecuzione della query", err);
-                    res.status(500).json({ error: "Errore interno del server" });
-                    return;
+                    return res.status(500).json({ error: "Errore interno del server" });
                 }
 
                 if (result.affectedRows === 0) {
-                    res.status(404).send({ message: "Utente non modificato"});
-                    return;
+                    return res.status(404).send({ message: "Utente non modificato"});
                 }
-                res.status(200).json({ message: "Utente modificato con successo"});
+                return res.status(200).json({ message: "Utente modificato con successo"});
             })
     } catch (err) {
-        console.error("Errore generale:", err);
-        res.status(500).json({ error: "Errore interno del server" });
+        return res.status(500).json({ error: "Errore interno del server" });
     }
 })
 
@@ -97,18 +141,17 @@ app.post("/api/changePassword", function(req, res) {
         const dataProfileQuery = email.includes("@experiacoffee.it") ? changeDipendentePasswordQuery : changeClientePasswordQuery;
         connection.query(dataProfileQuery, [password, email], function(err, result) {
                 if (err) {
-                    console.error("Errore durante l'esecuzione della query", err);
-                    res.status(500).json({ error: "Errore interno del server" });
-                    return;
+                    return res.status(500).json({ error: "Errore interno del server" });
+                   
                 }
                 if (result.affectedRows === 0) {
-                    res.status(404).send({ message: "Password non modificata"});
-                    return;
+                    return res.status(404).send({ message: "Password non modificata"});
+                
                 }
-                res.status(200).json({ message: "Password modificata con successo"});
+                return res.status(200).json({ message: "Password modificata con successo"});
             })
     } catch (err) {
-        res.status(500).send({message: "Errore di connessione al database"});
+        return res.status(500).send({message: "Errore di connessione al database"});
     }
 })
 
@@ -117,16 +160,15 @@ app.post("/api/createOrder", function(req, res) {
     try {
         connection.query(createOrderQuery, [cartID, email, email], function(err, result) {
             if(err) {
-                console.error("Errore durante l'esecuzione della query", err);
-                res.status(500).json({ error: "Errore interno del server" });
+                return res.status(500).json({ error: "Errore interno del server" });
             }
                 if (!result) {
-                    res.status(404).send({ message: "Errore nella creazione dell'ordine"});
+                    return res.status(404).send({ message: "Errore nella creazione dell'ordine"});
                 }
-                res.status(200).json(result);
+                return res.status(200).json(result);
             })
     } catch (err) {
-        res.status(500).send({message: "Errore di connessione al database"});
+        return res.status(500).send({message: "Errore di connessione al database"});
     }
 })
 
@@ -135,16 +177,15 @@ app.put("/api/updateOrder", function(req, res) {
     try {
             connection.query(updateOrderQuery, [numeroOrdine, statoOrdine, filialeInCarico, corriereInCarico, idOrdine], function(err, result) {
                 if (err) {
-                    console.error("Errore durante l'esecuzione della query", err);
-                    res.status(500).json({ error: "Errore interno del server" });
+                    return res.status(500).json({ error: "Errore interno del server" });
                 }
                 if (!result) {
-                    res.status(404).send({ message: "Password non modificata"});
+                   return res.status(404).send({ message: "Password non modificata"});
                 }
-                res.status(200).json(result);
+                return res.status(200).json(result);
             })
     } catch (err) {
-        res.status(500).send({message: "Errore di connessione al database"});
+        return res.status(500).send({message: "Errore di connessione al database"});
     }
 })
 
@@ -153,16 +194,16 @@ app.delete("/api/deleteOrder", function(req, res) {
     try {
             connection.query(deleteOrderQuery, [idOrdine], function(err, result) {
                 if (err) {
-                    console.error("Errore durante l'esecuzione della query", err);
-                    res.status(500).json({ error: "Errore interno del server" });
+                    
+                    return res.status(500).json({ error: "Errore interno del server" });
                 }
                 if (!result) {
-                    res.status(404).send({ message: "Password non modificata"});
+                    return res.status(404).send({ message: "Password non modificata"});
                 }
-                res.status(200).json(result);
+                return res.status(200).json(result);
             })
     } catch (err) {
-        res.status(500).send({message: "Errore di connessione al database"});
+        return res.status(500).send({message: "Errore di connessione al database"});
     }
 })
 
@@ -171,16 +212,16 @@ app.post("/api/getOrderListByClient", function(req, res) {
     try {
             connection.query(orderListByClientQuery, [email], function(err, result) {
                 if(err) {
-                    console.error("Errore durante l'esecuzione della query", err);
-                    res.status(500).json({ error: "Errore interno del server" });
+                    
+                    return res.status(500).json({ error: "Errore interno del server" });
                 }
                 if (!result) {
-                    res.status(404).send({ message: "Password non modificata"});
+                    return res.status(404).send({ message: "Password non modificata"});
                 }
-                res.status(200).json(result);
+                return res.status(200).json(result);
             })
     } catch (err) {
-        res.status(500).send({message: "Errore di connessione al database"});
+        return res.status(500).send({message: "Errore di connessione al database"});
     }
 })
 
@@ -188,16 +229,16 @@ app.get("/api/getOrderList", function(req, res) {
     try {
             connection.query(orderListQuery, function(err, result) {
                 if(err) {
-                    console.error("Errore durante l'esecuzione della query", err);
-                    res.status(500).json({ error: "Errore interno del server" });
+                    
+                    return res.status(500).json({ error: "Errore interno del server" });
                 }
                 if (!result) {
-                    res.status(404).send({ message: "Password non modificata"});
+                    return res.status(404).send({ message: "Password non modificata"});
                 }
-                res.status(200).json(result);
+                return res.status(200).json(result);
             })
     } catch (err) {
-        res.status(500).send({message: "Errore di connessione al database"});
+        return res.status(500).send({message: "Errore di connessione al database"});
     }
 })
 
@@ -205,40 +246,18 @@ app.get("/api/getWarehouseList", function(req, res) {
     try {
             connection.query(warehouseListQuery, function(err, result) {
                 if(err) {
-                    console.error("Errore durante l'esecuzione della query", err);
-                    res.status(500).json({ error: "Errore interno del server" });
+                    
+                    return res.status(500).json({ error: "Errore interno del server" });
                 }
                 if (!result) {
-                    res.status(404).send({ message: "Password non modificata"});
+                    return res.status(404).send({ message: "Password non modificata"});
                 }
-                res.status(200).json(result);
+                return res.status(200).json(result);
             })
     } catch (err) {
-        res.status(500).send({message: "Errore di connessione al database"});
+        return res.status(500).send({message: "Errore di connessione al database"});
     }
 })
-
-
-// AUTH API
-app.post("/api/auth", function(req, res) {
-    const { username, password } = req.body;
-    try {
-            // check intermedio per controllare se si tratta di un dipendente oppure un cliente
-            const authQuery = username.includes("@experiacoffee.it") ? dipendenteAuthQuery : clienteAuthQuery;
-            connection.query(authQuery, [username, password], function(err, result) {
-                if (err) {
-                    console.error("Errore nella query del profilo dell'utente:", err);
-                    return res.status(500).send({ message: "Errore nella query del profilo dell'utente" });
-                }
-                if (result.length === 0) {
-                    res.status(404).send({message: "Credenziali utenti errate."});
-                }
-                res.status(200).send({username: username, password: password});
-            });
-    } catch (err) {
-        res.status(500).send({message: "Errore di connessione al database"});
-    }
-});
 
 
 // SIGNUP API
@@ -248,15 +267,15 @@ app.post("/api/signUp", function(req,res) {
     try {
             connection.query(signupQuery, [body.NOME, body.COGNOME, body.EMAIL, body.CELLULARE, body.CITTA, body.VIA, body.N_CIVICO, body.CAP, body.UTENTE_PASSWORD, body.NUM_CARTA, body.CVV_CARTA, body.INTESTATARIO_CARTA, body.SCADENZA_CARTA, body.CODICE_FISCALE, body.DATA_DI_NASCITA], function(err, result) {
                 if(err) {
-                    console.error("Errore durante l'esecuzione della query", err);
-                    res.status(500).json({error: "Errore interno del server"});
+                    
+                    return res.status(500).json({error: "Errore interno del server"});
                 } else {
-                    res.status(200).json(result);
+                    return res.status(200).json(result);
                 }
             })
     } catch (err) {
-        console.error("Errore durante la connessione al database:", err);
-        res.status(500).json({ error: "Errore interno del server"});
+        
+        return res.status(500).json({ error: "Errore interno del server"});
     }
 });
 
@@ -264,14 +283,14 @@ app.get("/api/getProductList", function(req, res, next) {
     try {
             connection.query(getMarketListQuery, function(err, result) {
                 if (err) {
-                    console.error("Errore nella query:", err);
-                    res.status(500).json({error: "Errore interno del server"});
+                
+                    return res.status(500).json({error: "Errore interno del server"});
                 } else {
-                    res.status(200).json(result);
+                    return res.status(200).json(result);
                 }
             });
     } catch (err) {
-        res.status(500).json({error: "Errore interno del server"});
+        return res.status(500).json({error: "Errore interno del server"});
     }
 })
 
@@ -293,5 +312,5 @@ const orderListQuery = "SELECT o.ID_ORDINE, o.NUMERO_ORDINE, o.STATO_ORDINE, c.E
 const warehouseListQuery = "SELECT f.NOME_FILIALE, m.ID_PRODOTTO, m.NOME_PRODOTTO, m.QUANTITA_PRODOTTO FROM tbl_filiale f JOIN tbl_magazzino m ON f.CODICE_ZONA_FILIALE = m.CODICE_MAGAZZINO;";
 
 app.listen(3000, () => {
-    console.log(`Listening on port 3000`);
+    console.log(`Backend is listening on port 3000`);
 });

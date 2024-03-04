@@ -27,8 +27,16 @@ services:
     build:
       context: db/
       dockerfile: Dockerfile.database
+    restart: always
     environment:
-      - MYSQL_DATABASE=experia_coffee
-      - MYSQL_USER=daevel
-      - MYSQL_PASSWORD=password
-      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=${MYSQL_DB}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PWD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PWD}
+    ports:
+      - ${MYSQL_PORT}:3306
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:

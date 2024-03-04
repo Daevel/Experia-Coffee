@@ -1,7 +1,5 @@
-import { apiUrl } from "./appEnvironment.js";
-import {checkPasswordAreEqual} from "./utility.js";
+import { apiUrl } from "./appEnvironment.js";;
 import {deleteFilters} from "./dipendenteHomePage.js";
-import {proceedOrder} from "./checkoutPage.js";
 
 export function establishConnection() {
     $.get({
@@ -12,7 +10,6 @@ export function establishConnection() {
             if(response.message === "connected") {
                 window.location.href = '../pages/loginPage.html';
             }
-            console.log('authentication failed');
         },
         error: function (error) {
             console.error("DATABASE CONNECTION FAILED", error);
@@ -20,6 +17,18 @@ export function establishConnection() {
     })
 }
 
+
+/**
+ * @function login
+ * @description Effettua l'autenticazione dell'utente.
+ *
+ * @param {string} username - username utente
+ * @param {string} password - password utente
+ * @returns {boolean} se username e password sono corretti.
+ *
+ * @author Daevel
+ * @version 1.0.0
+ */
 export function login() {
        const username=  $("#username").val();
        const password = $("#password").val();
@@ -52,13 +61,11 @@ export function login() {
                } else {
                    window.location.href = "homePage.html";
                }
-           } else {
-               $('#loginErrorMessage').text('Username o password non corrette, riprovare.');
            }
        },
        error: function(e) {
         console.error(e);
-           $('#loginErrorMessage').text('Errore durante il tentativo di accesso. Riprova più tardi.');
+           $('#loginErrorMessage').text(e.message);
        }
    })
 }
