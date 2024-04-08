@@ -1,7 +1,6 @@
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
-const { PrismaClient } = require('@prisma/client');
 
 const mysqlConfig = {
     host: "mysql_server",
@@ -16,7 +15,6 @@ const mysqlConfig = {
 const connection = mysql.createPool(mysqlConfig);
 
 const app = express();
-const prisma = new PrismaClient();
 
 app.use(cors());
 app.use((req, res, next) => {
@@ -30,35 +28,6 @@ app.use(express.urlencoded({ extended: false }));
 
 app.get("/", function (req, res) {
     res.send("Hello world");
-})
-
-// trying to add a new user
-app.post("/api/addUserAndProfile", async (req, res) => {
-    try {
-        const { name, email, bio } = req.body;
-
-        const newUser = await prisma.user.create({
-            data: {
-                name,
-                email,
-            },
-        });
-
-        const newProfile = await prisma.profile.create({
-            data: {
-                bio,
-                user: {
-                    connect: { id: newUser.id },
-                },
-            },
-        });
-
-        await prisma.$disconnect();
-
-    } catch (error) {
-        console.error('Errore durante la creazione del nuovo utente');
-        return res.status(500).send({error: 'Errore durante la creazione di utente e profilo'});
-    }
 })
 
 // DB CONN

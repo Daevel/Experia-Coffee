@@ -10,10 +10,6 @@ COPY /package*.json ./
 # Installa le dipendenze del backend
 RUN npm install
 
-# Installa Prisma CLI e genera il client Prisma
-RUN npm install -g prisma
-RUN npx prisma generate
-
 # Copia il codice del backend
 COPY . .
 
@@ -21,6 +17,6 @@ EXPOSE 3000
 
 VOLUME ["/usr/src/app/node_modules"]
 
-# Comando per avviare l'applicazione e lo script Prisma
-CMD ["npm", "start"]s
+# Comando per avviare l'applicazione
+CMD ["npm", "start"]
 
